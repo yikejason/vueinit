@@ -1,5 +1,5 @@
 <template>
-  <div class="HeadBox"><a>用户：退出登录</a>&nbsp;<a-icon type="setting"></a-icon></div>
+  <div class="HeadBox"><a href="/user">用户：退出登录</a>&nbsp;<a-icon type="setting"></a-icon></div>
 </template>
 
 <script>

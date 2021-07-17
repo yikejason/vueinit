@@ -9,6 +9,7 @@ const routes = [
     name:'user',
     component:() => import('./Layout/userlayout.vue'),
     children:[
+
         {
           path:'/user',
           redirect:'/user/login'

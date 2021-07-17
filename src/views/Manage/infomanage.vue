@@ -183,7 +183,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .top{max-height: 400px;border:1px solid rgb(255, 255, 255);padding: 10px;border-radius: 6px;box-shadow: 0 0px 6px 0px;margin: 10px;}
 .content{min-height: 525px;border:1px solid rgb(255, 255, 255);padding: 10px;border-radius: 6px;box-shadow: 0 0px 6px 0px;margin: 10px;}
 /* .modalSty{font-size: 13px;} */

@@ -8,7 +8,7 @@
       <a-form
         id="components-form-demo-normal-login"
         :form="form"
-        class="login-form"
+        class="login-form"  
         @submit="handleSubmit"
       >
       <a-form-item>
@@ -50,7 +50,7 @@
         <a class="login-form-forgot" href="">
           忘记密码
         </a>
-        <a-button type="primary" html-type="submit" class="login-form-button">
+        <a-button type="primary" html-type="submit" class="login-form-button" @click="navindex">
           登录
         </a-button>
         其他登录方式
@@ -87,6 +87,9 @@ export default {
         }
       });
     },
+    navindex(){
+      this.$router.push({path:'/admin'})
+    }
   },
 }
 </script>
