@@ -3,13 +3,17 @@
       <div class="top">
         <template>
             <a-form layout="inline" :form="form" @submit="handleSubmit">
-                <span style="font-size:20px;margin-top:5px">时间:&nbsp;</span>
+                <!-- <span style="font-size:20px;margin-top:5px">时间:&nbsp;</span> -->
+                <a-form-item label="时间：" style="margin-left:5px;">
+
+               
                 <a-range-picker @change="onChange" style="margin-top:4px">
                     <a-icon slot="suffixIcon" type="calendar" />
-                </a-range-picker>
+                </a-range-picker> 
+                </a-form-item>
                 <a-form-item>
                 
-                <a-button type="primary" html-type="submit" :disabled="hasErrors(form.getFieldsError())" style="margin-left:10px">
+                <a-button type="primary"   style="margin-left:10px">
                     搜索
                 </a-button>
                 <a-button type="primary" @click="() => (modal2Visible = true)" style="margin-left:10px">
@@ -18,61 +22,42 @@
                                                 
                 </a-form-item>
             </a-form>
-            <a-modal v-model="modal2Visible" title="新增消息" centered  @ok="() => (modal2Visible = false)" :width='600' :height='500' okText='确定' cancelText='取消'>
-            <a-row type="flex" justify="start"  class="modalSty">
-                <a-col :span="4" push='0'>
-                    <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;" /> &nbsp;<strong>标题:</strong>
-                </a-col>
-                <a-col :span="16" push="0">
-                    <a-input allow-clear @change="onChange" />
-                </a-col>
-            </a-row>
-            <a-row type="flex" justify="start" style="margin:10px 0 10px 0"  class="modalSty">
-                <a-col :span="4">
-                    <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;"  />&nbsp;<strong>消息简讯&nbsp;:</strong>
-                </a-col>
-                <a-col :span="16">
-                    <a-textarea allow-clear @change="onChange" />
-                </a-col>
-            </a-row>                
-            <a-row type="flex" justify="start"  class="modalSty">
-                <a-col :span="4" >
-                    <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;"  />&nbsp;<strong>消息详情&nbsp;:</strong>
-                </a-col>
-                <a-col :span="16" style="margin-bottom: 10px;" >
-                    <a-textarea allow-clear @change="onChange" />
-                </a-col>
-            </a-row>
-            <a-row  class="modalSty" style="margin:10px 0 10px 0">
-                <a-col :span="4">
-                    <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;"  />&nbsp;<strong>发送对象&nbsp;:</strong>
-                </a-col>
-                <a-col :span="12">
-                    <a-radio-group name="radioGroup" :default-value="0">
-                        <a-radio :value="1">
-                        顾客
-                        </a-radio>
-                        <a-radio :value="2">
-                        业务员
-                        </a-radio>
-                    </a-radio-group>                       
-                </a-col>
-            </a-row>
-            <a-row  class="modalSty">
-                <a-col :span="4">
-                    <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;" />&nbsp;<strong>发送方式&nbsp;:</strong>
-                </a-col>
-                <a-col :span="12">
-                    <a-radio-group name="radioGroup" :default-value="0">
-                        <a-radio :value="1">
-                        顾客
-                        </a-radio>
-                        <a-radio :value="2">
-                        业务员
-                        </a-radio>
-                    </a-radio-group>  
-                </a-col>
-            </a-row>                
+            <a-modal v-model="modal2Visible" title="新增消息" centered  @ok='handleSubmit' :width='600'  okText='确定' cancelText='取消'>
+               <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 16 }">
+                <a-form-item label="标题:" >
+                  <a-input
+                    v-decorator="['title', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+                  />
+                </a-form-item>
+                <a-form-item label="消息简讯:">
+                  <a-textarea allow-clear  v-decorator="['message', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+                  />
+                </a-form-item>
+                <a-form-item label="消息详情:">
+                  <a-textarea allow-clear  v-decorator="['messageDetail', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+                  />
+                </a-form-item>
+                <a-form-item label="发送详情:" >
+                  <a-radio-group name="radioGroup" :default-value="0" v-decorator="['radioDetail', { rules: [{ required: true }] }]">
+                      <a-radio :value="1" >
+                      顾客
+                      </a-radio>
+                      <a-radio :value="2">
+                      业务员
+                      </a-radio>
+                  </a-radio-group>   
+                </a-form-item>
+                <a-form-item label="发送方式:">
+                  <a-radio-group name="radioGroup"  v-decorator="['radioWay', { rules: [{ required: true }]}]">
+                    <a-radio :value="1" >
+                    顾客
+                    </a-radio>
+                    <a-radio :value="2">
+                    业务员
+                    </a-radio>
+                  </a-radio-group>   
+                </a-form-item>
+               </a-form>
             </a-modal>
         </template>
       </div>
@@ -90,9 +75,11 @@
 
 
 <script>
-function hasErrors(fieldsError) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
+import axios from 'axios';
+import baseUrl from '../../request'
+// function hasErrors(fieldsError) {
+//   return Object.keys(fieldsError).some(field => fieldsError[field]);
+// }
 const columns = [
   {
     title: 'ID',
@@ -110,12 +97,12 @@ const columns = [
   },
     {
     title: '微信openid',
-    dataIndex: 'wechat',
+    dataIndex: 'wexinId',
     width: 150,
   },
   {
     title: '钉钉openid',
-    dataIndex: 'dingding',
+    dataIndex: 'dingdingId',
     width: 150,
   },
   {
@@ -129,23 +116,16 @@ const columns = [
 ];
 
 const data = [];
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i,
-//     name: `Edward King ${i}`,
-//     age: 32,
-//     address: `London, Park Lane no. ${i}`,
-//   });
-// }
+
 export default {
   data() {
     return {
-      hasErrors,
       form: this.$form.createForm(this, { name: 'horizontal_login' }),
       data,
       columns,
       modal1Visible: false,
       modal2Visible: false,
+      addlist:[]
     };
   },
   mounted() {
@@ -153,32 +133,48 @@ export default {
       // To disabled submit button at the beginning.
     //   this.form.validateFields();
     });
+    this.getMsgInfo()
   },
   methods: {
+    addMsg(){
+      axios.post(`${baseUrl.url}/api/v1/addMessage`,{title:this.addlist.title,message:this.addlist.message,
+        messageDetail:this.addlist.messageDetail,sendObj:this.addlist.sendObj,sendWay:this.addlist.sendWay})
+        .then(res=>{
+          // console.log(res);
+          if(res.data.success == true){
+            alert('新增消息成功');
+          }
+        })
+    }
+    ,
     setModal1Visible(modal1Visible) {
       this.modal1Visible = modal1Visible;
     },
-    // Only show error after a field is touched.
-    userNameError() {
-      const { getFieldError, isFieldTouched } = this.form;
-      return isFieldTouched('userName') && getFieldError('userName');
-    },
-    // Only show error after a field is touched.
-    passwordError() {
-      const { getFieldError, isFieldTouched } = this.form;
-      return isFieldTouched('password') && getFieldError('password');
-    },
+
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
+          this.addlist = values
+          this.addMsg()
+          this.modal2Visible = false;
+        }else{
+          alert('请填写相应的空白项')
+
         }
       })
     },
     onChange(date, dateString) {
-      console.log(date, dateString);
+      console.log("change",date, dateString);
     },
+    getMsgInfo(){
+      axios.post(`${baseUrl.url}/api/v1/manualMessageList`)
+      .then(res=>{
+        // console.log(res.data.data.list);
+        this.data = res.data.data.list
+      })
+    }
   },
 };
 </script>

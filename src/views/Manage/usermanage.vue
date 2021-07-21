@@ -3,32 +3,35 @@
       <div class="top">
         <template>
             <a-form layout="inline" :form="form" @submit="handleSubmit">
-                <span style="font-size:20px;margin-top:5px">昵称:&nbsp;</span>
-                <a-form-item :validate-status="userNameError() ? 'error' : ''" :help="userNameError() || ''">
+                <!-- <span style="font-size:20px;margin-top:5px">昵称:&nbsp;</span> -->
+                <a-form-item label="昵称：" style="margin-left:15px">
+                <a-form-item :validate-status="NickName() ? 'error' : ''" :help="NickName() || ''">
                 <a-input
                     v-decorator="[
-                    'userName',
-                    { rules: [{ required: true, message: 'Please input your username!' }] },
+                    'nickname',
+                    { rules: [{ required: true, message: 'Please input your nickname!' }] },
                     ]"
                     placeholder="请输入昵称"
                 >
                     <!-- <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" /> -->
                 </a-input>
                 </a-form-item>
-               <span style="font-size:20px;margin-top:5px">联系电话:&nbsp;</span>
-                <a-form-item :validate-status="passwordError() ? 'error' : ''" :help="passwordError() || ''">
-                    
+                </a-form-item>
+               <!-- <span style="font-size:20px;margin-top:5px">联系电话:&nbsp;</span> -->
+               <a-form-item label="联系电话：">
+                <a-form-item :validate-status="ContactPhone() ? 'error' : ''" :help="ContactPhone() || ''">
                 <a-input
                     v-decorator="[
-                    'password',
-                    { rules: [{ required: true, message: 'Please input your Password!' }] },
+                    'contactphone',
+                    { rules: [{ required: true, message: 'Please input your Contactphone!' }] },
                     ]"
-                    type="password"
+                    type="contactphone"
                     placeholder="请输入联系电话"
                 >
                     <!-- <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" /> -->
                 </a-input>
                 </a-form-item>
+                 </a-form-item>
                 <a-form-item>
                 <a-button type="primary" html-type="submit" :disabled="hasErrors(form.getFieldsError())">
                     搜索
@@ -43,7 +46,7 @@
             :data-source="data"
             :pagination="{ pageSize: 50 }"
             :scroll="{ y: 380 }"
-            
+            key="data.title"
         />
       </div>
   </div>
@@ -51,6 +54,8 @@
 
 
 <script>
+import axios from 'axios';
+import baseUrl from '../../request'
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
@@ -71,12 +76,12 @@ const columns = [
   },
     {
     title: '微信openid',
-    dataIndex: 'wechat',
+    dataIndex: 'wexinId',
     width: 150,
   },
   {
     title: '钉钉openid',
-    dataIndex: 'dingding',
+    dataIndex: 'dingdingId',
     width: 150,
   },
   {
@@ -89,22 +94,15 @@ const columns = [
   }
 ];
 
-const data = [];
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i,
-//     name: `Edward King ${i}`,
-//     age: 32,
-//     address: `London, Park Lane no. ${i}`,
-//   });
-// }
 export default {
   data() {
     return {
       hasErrors,
       form: this.$form.createForm(this, { name: 'horizontal_login' }),
-      data,
+      data:[],
       columns,
+      id:'',
+      searchList:[]
     };
   },
   mounted() {
@@ -112,28 +110,48 @@ export default {
       // To disabled submit button at the beginning.
     //   this.form.validateFields();
     });
+    this.getUserList()
   },
   methods: {
     // Only show error after a field is touched.
-    userNameError() {
+    NickName() {
       const { getFieldError, isFieldTouched } = this.form;
-      return isFieldTouched('userName') && getFieldError('userName');
+      return isFieldTouched('nickname') && getFieldError('nickname');
     },
     // Only show error after a field is touched.
-    passwordError() {
+    ContactPhone() {
       const { getFieldError, isFieldTouched } = this.form;
-      return isFieldTouched('password') && getFieldError('password');
+      return isFieldTouched('contactphone') && getFieldError('contactphone');
     },
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
+          this.searchList = values;
+          this.getSearchInfo(this.searchList);
         }
+        // this.getUserList()
       });
     },
+    getUserList(){
+      axios.get(`${baseUrl.url}/api/v1/userlist`)
+      .then(res=>{
+        // console.log(res.data.data.list);
+        this.data = res.data.data.list
+      })
+    },
+    getSearchInfo(e){
+      axios.post(`${baseUrl.url}/api/v1/search/user`,{name:e.name,phone:e.phone})
+      .then(res=>{
+        console.log(res);
+        if(res.data.success){
+          alert('搜索成功')
+        }
+      })
+    }
   },
-};
+}
 </script>
 
 <style>

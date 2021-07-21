@@ -18,6 +18,7 @@
             { rules: [{ required: true, message: 'Please input your username!' }] },
           ]"
           placeholder="用户名"
+          name='username'
         >
           <a-icon slot="prefix" type="user" style="color: rgba(134,199,255)" />
         </a-input>
@@ -29,7 +30,7 @@
             { rules: [{ required: true, message: 'Please input your Password!' }] },
           ]"
           type="password"
-          placeholder="密码"  class="iptBox"
+          placeholder="密码"  class="iptBox" name='password'
         >
           <a-icon slot="prefix" type="lock" style="color: rgba(134,199,255)" />
         </a-input>
@@ -50,7 +51,7 @@
         <a class="login-form-forgot" href="">
           忘记密码
         </a>
-        <a-button type="primary" html-type="submit" class="login-form-button" @click="navindex">
+        <a-button type="primary" html-type="submit" class="login-form-button" @click="handleSubmit">
           登录
         </a-button>
         其他登录方式
@@ -74,9 +75,17 @@
 </template>
 
 <script>
+import axios from 'axios';
+import baseUrl from '../../request'
 export default {
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'normal_login' });
+  },
+  data(){
+    return{
+      username:'',
+      password:''
+    }
   },
   methods: {
     handleSubmit(e) {
@@ -84,12 +93,27 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
+          this.username = values.userName;
+          this.password = values.password;
+          this.getUseInfo();
+          
         }
+        
       });
     },
-    navindex(){
-      this.$router.push({path:'/admin'})
-    }
+    getUseInfo(){
+      axios.post(`${baseUrl.url}/api/v1/login`,{username:this.username,password:this.password})
+      .then(res=>{
+        if(res.data.data.userInfo!==null){
+          console.log(res);
+          this.$router.push({path:'/admin'})
+        }else{
+          alert('输入正确的账号和密码')
+        }
+      }).catch(err=>{
+        console.log(err);
+      })
+    },
   },
 }
 </script>

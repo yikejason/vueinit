@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import { Button,icon,tabs,form,input,Checkbox,Layout,Menu,breadcrumb,Switch,table,DatePicker,modal,row,col,radio,upload } from "ant-design-vue"; //引入组件，但不用引入样式
 import router from './router'
+import requests from './request.js'
+Vue.prototype.rq = requests 
 // import E from 'wangeditor-antd'
 
 Vue.use(modal)
@@ -23,7 +25,6 @@ Vue.use(radio)
 Vue.use(upload)
 // Vue.use(E)
 Vue.config.productionTip = false;
-
 
 
 new Vue({

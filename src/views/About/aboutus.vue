@@ -1,51 +1,42 @@
 <template>
   <!-- -->
   <div class="aboutSty">
-      <a-row type="flex" justify="start"  class="modalSty">
-        <a-col :span="4" push=2>
-            <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;" />&nbsp;<strong>客户服务&nbsp;:</strong>
-        </a-col>
-        <a-col :span="16">
-            <a-input allow-clear />
-        </a-col>
-    </a-row>
-    <a-row type="flex" justify="start" style="margin:10px 0 10px 0"  class="modalSty">
-        <a-col :span="4" push=2>
-            <a-icon type="star" theme="filled" :style="{color:'red'}" style="font-size:6px;"  />&nbsp;<strong>联系我们&nbsp;:</strong>
-        </a-col>
-        <a-col :span="16">
-           <div ref="editor"></div>
-        </a-col>
-    </a-row>                
-    <a-row type="flex" justify="start"  class="modalSty">
-        <a-col :span="4" push="1">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>广告线索图片&nbsp;:</strong>
-        </a-col>
-        <a-col :span="16" style="margin-bottom: 10px;" >
-            <a-upload
-            name="avatar"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            :before-upload="beforeUpload"
-            @change="handleChange"
-          >
-            <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-            <div v-else>
-              <a-icon :type="loading ? 'loading' : 'plus'" />
-              <div class="ant-upload-text">
-                更换图片
-              </div>
-            </div>
-          </a-upload>
-        </a-col>
-    </a-row>
-    <a-row type="flex" justify="start"  class="modalSty">
-        <a-col :span="10" push=4>
+    <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 15 }">
+    <a-form-item label="客户服务:" >
+      <a-input
+        v-decorator="['title', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+      />
+    </a-form-item>
+    <a-form-item label="联系我们:">
+      <div ref="editor"></div>
+    </a-form-item>
+    <a-form-item label='广告线索图片:'>
+      <a-upload
+        name="avatar"
+        list-type="picture-card"
+        class="avatar-uploader"
+        :show-upload-list="false"
+        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        :before-upload="beforeUpload"
+        @change="handleChange"
+      >
+        <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+        <div v-else>
+          <a-icon :type="loading ? 'loading' : 'plus'" />
+          <div class="ant-upload-text">
+            更换图片
+          </div>
+        </div>
+      </a-upload>
+    </a-form-item>
+        <a-row type="flex" justify="start">
+        <a-col :span="16" push=5>
            <a-button type="primary">确认</a-button> 
         </a-col>
+
     </a-row>
+    </a-form>
+
        
   </div>
 
@@ -113,7 +104,7 @@ export default {
 </script>
 
 <style>
-.aboutSty{margin-top: 5%;}
+.aboutSty{margin-top: 3%;}
 /* .editorSty{height: 500px;} */
 .avatar-uploader > .ant-upload {
   width: 300px;

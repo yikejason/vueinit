@@ -5,6 +5,10 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path:'/',
+    redirect:'/user'
+  },
+  {
     path:'/user',
     name:'user',
     component:() => import('./Layout/userlayout.vue'),
