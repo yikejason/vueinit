@@ -75,8 +75,8 @@
 
 
 <script>
-import axios from 'axios';
-import baseUrl from '../../request'
+// import axios from 'axios';
+// import baseUrl from '../../request'
 // function hasErrors(fieldsError) {
 //   return Object.keys(fieldsError).some(field => fieldsError[field]);
 // }
@@ -137,16 +137,23 @@ export default {
   },
   methods: {
     addMsg(){
-      axios.post(`${baseUrl.url}/api/v1/addMessage`,{title:this.addlist.title,message:this.addlist.message,
+      this.$http.post('/api/v1/addMessage',{title:this.addlist.title,message:this.addlist.message,
         messageDetail:this.addlist.messageDetail,sendObj:this.addlist.sendObj,sendWay:this.addlist.sendWay})
-        .then(res=>{
+      .then(res=>{
           // console.log(res);
           if(res.data.success == true){
-            alert('新增消息成功');
+            this.$message.success('新增成功')
           }
-        })
-    }
-    ,
+          })
+      // axios.post(`${baseUrl.url}/api/v1/addMessage`,{title:this.addlist.title,message:this.addlist.message,
+      //   messageDetail:this.addlist.messageDetail,sendObj:this.addlist.sendObj,sendWay:this.addlist.sendWay})
+      //   .then(res=>{
+      //     // console.log(res);
+      //     if(res.data.success == true){
+      //       this.$message.success('新增成功')
+      //     }
+      //   })
+    },
     setModal1Visible(modal1Visible) {
       this.modal1Visible = modal1Visible;
     },
@@ -160,8 +167,8 @@ export default {
           this.addMsg()
           this.modal2Visible = false;
         }else{
-          alert('请填写相应的空白项')
-
+          // alert('请填写相应的空白项')
+          this.$message.warn('请填写相应的空白项')
         }
       })
     },
@@ -169,7 +176,8 @@ export default {
       console.log("change",date, dateString);
     },
     getMsgInfo(){
-      axios.post(`${baseUrl.url}/api/v1/manualMessageList`)
+      this.$http.post('/api/v1/manualMessageList')
+      // axios.post(`${baseUrl.url}/api/v1/manualMessageList`)
       .then(res=>{
         // console.log(res.data.data.list);
         this.data = res.data.data.list

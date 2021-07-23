@@ -33,7 +33,7 @@
                 </a-form-item>
                  </a-form-item>
                 <a-form-item>
-                <a-button type="primary" html-type="submit" :disabled="hasErrors(form.getFieldsError())">
+                <a-button type="primary" html-type="submit" :disabled="hasErrors(form.getFieldsError())" >
                     搜索
                 </a-button>
                 </a-form-item>
@@ -49,13 +49,16 @@
             key="data.title"
         />
       </div>
+    <div>
   </div>
+  </div>
+  
 </template>
 
 
 <script>
-import axios from 'axios';
-import baseUrl from '../../request'
+// import axios from 'axios';
+// import baseUrl from '../../request'
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
@@ -130,26 +133,42 @@ export default {
           console.log('Received values of form: ', values);
           this.searchList = values;
           this.getSearchInfo(this.searchList);
+          // this.success()
         }
         // this.getUserList()
       });
     },
     getUserList(){
-      axios.get(`${baseUrl.url}/api/v1/userlist`)
+      this.$http.get('/api/v1/userlist')
       .then(res=>{
-        // console.log(res.data.data.list);
         this.data = res.data.data.list
       })
+      // axios.get(`${baseUrl.url}/api/v1/userlist`)
+      // .then(res=>{
+      //   // console.log(res.data.data.list);
+      //   this.data = res.data.data.list
+      // })
+    },
+    success() {
+      this.$message.success('搜索成功');
     },
     getSearchInfo(e){
-      axios.post(`${baseUrl.url}/api/v1/search/user`,{name:e.name,phone:e.phone})
+      this.$http.post('/api/v1/search/user',{name:e.name,phone:e.phone})
       .then(res=>{
-        console.log(res);
+        // console.log(res);
         if(res.data.success){
-          alert('搜索成功')
+          this.success();
         }
       })
-    }
+      // axios.post(`${baseUrl.url}/api/v1/search/user`,{name:e.name,phone:e.phone})
+      // .then(res=>{
+      //   // console.log(res);
+      //   if(res.data.success){
+      //     this.success();
+      //   }
+      // })
+    },
+
   },
 }
 </script>

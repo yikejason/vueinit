@@ -29,7 +29,7 @@
         </div>
       </a-upload>
     </a-form-item>
-        <a-row type="flex" justify="start">
+        <a-row type="flex" justify="start"  class="modalSty">
         <a-col :span="16" push=5>
            <a-button type="primary">确认</a-button> 
         </a-col>
@@ -42,7 +42,7 @@
 
 </template>
 <script>
-import E from 'wangeditor-antd'
+import E from '../../../node_modules/wangeditor-antd'
 function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
